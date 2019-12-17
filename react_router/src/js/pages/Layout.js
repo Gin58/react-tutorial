@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, withRouter } from "react-router-dom";
+import { NavLink, Link, withRouter } from "react-router-dom";
 
 class Layout extends React.Component {
   navigate() {
@@ -13,7 +13,7 @@ class Layout extends React.Component {
         {this.props.children}
         <Link to="/archives/some-other-articles?date=yesterday&filter=none" class="btn btn-warning">archives (some other articles)</Link>
         <Link to="/archives?date=today&filter=hot" class="btn btn-danger">archives</Link>
-        <Link to="/settings/main" class="btn btn-success">settings</Link>
+        <NavLink to="/settings/main" class="btn btn-success" activeClassName="btn-danger">settings</NavLink>
         <Link to="/settings/extra" class="btn btn-success">settings (extra)</Link>
         <button class="btn btn-info" onClick={this.navigate.bind(this)}>featured</button>
       </div>
