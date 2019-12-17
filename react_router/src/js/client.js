@@ -14,7 +14,6 @@ ReactDOM.render(
     <Layout>
       <Route exact path="/" component={Featured}></Route>
       <Route exact path="/archives" component={Archives}></Route>
-      <Route path="/archives/:article" component={Archives}></Route>
       <Route path="/settings/:mode(main|extra)" component={Settings}></Route>
     </Layout>
   </Router>,
