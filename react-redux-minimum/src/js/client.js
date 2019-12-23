@@ -1,42 +1,36 @@
 import { applyMiddleware, createStore } from "redux";
+import axios from "axios";
+import { createLogger } from "redux-logger";
+import promise from "redux-promise-middleware";
 
-const reducer = (state = 0, action) => {
-  switch(action.type) {
-    case "INC":
-      state = state + 1;
-      break;
-    case "DEC":
-      state = state - 1;
-      break;
-    case "ERR":
-      throw new Error("It's error!!!");
+const initialState = {
+  fetching: false,
+  fetched: false,
+  users: [],
+  error: null
+};
+
+const reducer = (state=initialState, action) => {
+  switch (action.type) {
+    case "FETCH_USERS_PENDING":
+      return{...state, fetching: true};
+    case "FETCH_USERS_REJECTED":
+      return{...state, fetching: false, error: action.peyload};
+    case "FETCH_USERS_FULFILLED":
+      return {
+        ...state,
+        fetching: false,
+        fetched: true,
+        users: action.peyload
+      };
   }
   return state;
 }
 
-const logger = (store) => (next) => (action) => {
-  console.log("action fired", action);
-  next(action);
-}
+const middleware = applyMiddleware(promise(), createLogger());
+const store = createStore(reducer, middleware);
 
-const error = (store) => (next) => (action) => {
-  try{
-    next(action);
-  } catch (e) {
-    console.log("Error was occured", e);
-  }
-}
-
-const middleware = applyMiddleware(logger, error);
-
-const store = createStore(reducer, 1, middleware);
-
-store.subscribe(() => {
-  console.log("store changed", store.getState());
+store.dispatch({
+  type: "FETCH_USERS",
+  payload: axios.get("http://localhost:18080")
 });
-
-store.dispatch({type: "INC"});
-store.dispatch({type: "INC"});
-store.dispatch({type: "DEC"});
-store.dispatch({type: "DEC"});
-store.dispatch({type: "ERR"});
